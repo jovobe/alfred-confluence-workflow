@@ -25,7 +25,7 @@
 	<key>createdby</key>
 	<string>Johan M. von Behren</string>
 	<key>description</key>
-	<string></string>
+	<string>Search Confluence from Alfred and open results in your browser.</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -67,7 +67,7 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>keyword</key>
-				<string>con</string>
+				<string>c</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -77,7 +77,7 @@
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string></string>
+				<string>Searching...</string>
 				<key>script</key>
 				<string>./alfred-confluence "${1}"</string>
 				<key>scriptargtype</key>
@@ -85,7 +85,7 @@
 				<key>scriptfile</key>
 				<string>test.sh</string>
 				<key>subtext</key>
-				<string></string>
+				<string>Search for Confluence Pages</string>
 				<key>title</key>
 				<string>Search Confluence</string>
 				<key>type</key>
@@ -102,11 +102,9 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Alfred's Script Filter object is extremely powerful, and gives you control over the results displayed in Alfred.
+	<string>Alfred Confluence Workflow
 
-Alfred 3 now supports JSON, which is the recommended format. XML is also supported for legacy Alfred 2 workflows, and has been updated to include the new features.
-
-A new option now exists for Script Filters, "Alfred filters results". This allows you to return a whole list of results, let Alfred do the subsequent filtering with extreme performance. When this option is selected, your script will be called once with no argument.</string>
+The Alfred Confluence workflow makes the Confluence search available in the Alfred App.</string>
 	<key>uidata</key>
 	<dict>
 		<key>50B0CD10-4D52-4898-9C05-DD3A34A829C3</key>
@@ -125,7 +123,7 @@ A new option now exists for Script Filters, "Alfred filters results". This allow
 		</dict>
 	</dict>
 	<key>version</key>
-	<string>1.0</string>
+	<string>1.0.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/jovobe/alfred-confluence-workflow</string>
 </dict>
