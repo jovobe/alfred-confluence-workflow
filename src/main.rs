@@ -58,7 +58,12 @@ struct AlfredResult {
     title: String,
     subtitle: String,
     arg: String,
-    icon: String,
+    icon: AlfredResultIcon,
+}
+
+#[derive(Serialize, Debug)]
+struct AlfredResultIcon {
+    path: String,
 }
 
 #[derive(Serialize, Debug)]
@@ -72,7 +77,9 @@ impl AlfredResult {
             title: confluence_match.name,
             subtitle: confluence_match.space_name.unwrap(),
             arg: format!("https://{}{}", "confluence.atlassian.com", confluence_match.href),
-            icon: format!("assets/{}.png", confluence_match.class_name),
+            icon: AlfredResultIcon {
+                path: format!("assets/{}.png", confluence_match.class_name),
+            },
         }
     }
 }
