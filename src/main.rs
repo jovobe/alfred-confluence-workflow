@@ -1,34 +1,32 @@
-use serde::{ Serialize, Deserialize };
-use reqwest::{ Error, blocking::Client };
+use serde::{Serialize, Deserialize};
+use reqwest::{Error, blocking::Client};
+use anyhow::{Context, Result};
 use std::env;
 
-fn main() -> Result<(), Error> {
+fn main() -> Result<()> {
+    let username = env::var("USERNAME").context("Confluence username not found!")?;
+    let password = env::var("PASSWORD").context("Confluence password not found!")?;
+    let base_url = env::var("BASE_URL").context("Confluence base url not found!")?;
+
     let args: Vec<String> = env::args().collect();
     let query = &args[1];
-    let request_url = format!(
-        "https://{base_url}/rest/quicknav/1/search",
-        base_url = "confluence.atlassian.com",
-    );
+    let request_url = format!("{base_url}/rest/quicknav/1/search", base_url = base_url);
 
-    if let (Ok(username), Ok(password)) = (env::var("USERNAME"), env::var("PASSWORD")) {
-        let client = Client::new();
-        let request = client
-            .get(request_url)
-            .query(&[("query", query)])
-            .basic_auth(username, Some(password));
-        let response = request.send()?;
+    let client = Client::new();
+    let request = client
+        .get(request_url)
+        .query(&[("query", query)])
+        .basic_auth(username, Some(password));
+    let response = request.send()?;
 
-        let result: ApiResponse = response.json()?;
-        //println!("{:#?}", result);
+    let result: ApiResponse = response.json()?;
 
-        let result_list = AlfredResultList::from(result);
-        //println!("{:#?}", result_list);
-        let out = serde_json::to_string(&result_list).unwrap();
-        println!("{}", out);
-    } else {
-        println!("Envs not found!");
-        return Ok(());
+    let result_list = AlfredResultList::from(result, &base_url);
+    if cfg!(debug_assertions) {
+        println!("{:#?}", result_list);
     }
+    let out = serde_json::to_string(&result_list).unwrap();
+    println!("{}", out);
 
     Ok(())
 }
@@ -72,11 +70,11 @@ struct AlfredResultList {
 }
 
 impl AlfredResult {
-    fn from(confluence_match: Match) -> AlfredResult {
+    fn from(confluence_match: Match, base_url: &String) -> AlfredResult {
         AlfredResult {
             title: confluence_match.name,
             subtitle: confluence_match.space_name.unwrap(),
-            arg: format!("https://{}{}", "confluence.atlassian.com", confluence_match.href),
+            arg: format!("{}{}", base_url, confluence_match.href),
             icon: AlfredResultIcon {
                 path: format!("assets/{}.png", confluence_match.class_name),
             },
@@ -85,7 +83,7 @@ impl AlfredResult {
 }
 
 impl AlfredResultList {
-    fn from(response: ApiResponse) -> AlfredResultList {
+    fn from(response: ApiResponse, base_url: &String) -> AlfredResultList {
         AlfredResultList {
             items: response
                 .content_name_matches
@@ -93,7 +91,7 @@ impl AlfredResultList {
                 .flatten()
                 .filter(|m| m.id.is_some())
                 .filter(|m| m.class_name == "content-type-page" || m.class_name == "content-type-blogpost" || m.class_name == "search-for")
-                .map(|m| AlfredResult::from(m))
+                .map(|m| AlfredResult::from(m, base_url))
                 .collect(),
         }
     }
