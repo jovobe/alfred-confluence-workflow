@@ -70,7 +70,7 @@ impl AlfredResult {
     fn from(confluence_match: Match) -> AlfredResult {
         AlfredResult {
             title: confluence_match.name,
-            subtitle: format!("{} - {}", confluence_match.space_key.unwrap(), confluence_match.space_name.unwrap()),
+            subtitle: confluence_match.space_name.unwrap(),
             arg: format!("https://{}{}", "confluence.atlassian.com", confluence_match.href),
             icon: format!("assets/{}.png", confluence_match.class_name),
         }
