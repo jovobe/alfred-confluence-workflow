@@ -34,21 +34,23 @@ fn main() -> Result<(), Error> {
 }
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct ApiResponse {
-    queryTokens: Vec<String>,
+    query_tokens: Vec<String>,
     query: String,
-    totalSize: u32,
-    contentNameMatches: Vec<Vec<Match>>,
+    total_size: u32,
+    content_name_matches: Vec<Vec<Match>>,
 }
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct Match {
     id: Option<String>,
     name: String,
     href: String,
-    className: String,
-    spaceName: Option<String>,
-    spaceKey: Option<String>,
+    class_name: String,
+    space_name: Option<String>,
+    space_key: Option<String>,
 }
 
 #[derive(Serialize, Debug)]
@@ -68,9 +70,9 @@ impl AlfredResult {
     fn from(confluence_match: Match) -> AlfredResult {
         AlfredResult {
             title: confluence_match.name,
-            subtitle: format!("{} - {}", confluence_match.spaceKey.unwrap(), confluence_match.spaceName.unwrap()),
+            subtitle: format!("{} - {}", confluence_match.space_key.unwrap(), confluence_match.space_name.unwrap()),
             arg: format!("https://{}{}", "confluence.atlassian.com", confluence_match.href),
-            icon: format!("assets/{}.png", confluence_match.className),
+            icon: format!("assets/{}.png", confluence_match.class_name),
         }
     }
 }
@@ -79,11 +81,11 @@ impl AlfredResultList {
     fn from(response: ApiResponse) -> AlfredResultList {
         AlfredResultList {
             items: response
-                .contentNameMatches
+                .content_name_matches
                 .into_iter()
                 .flatten()
                 .filter(|m| m.id.is_some())
-                .filter(|m| m.className == "content-type-page" || m.className == "content-type-blogpost" || m.className == "search-for")
+                .filter(|m| m.class_name == "content-type-page" || m.class_name == "content-type-blogpost" || m.class_name == "search-for")
                 .map(|m| AlfredResult::from(m))
                 .collect(),
         }
