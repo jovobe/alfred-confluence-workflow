@@ -1,7 +1,14 @@
 # Alfred Confluence Workflow
 Search Confluence from Alfred and open results in your browser.
 
-## To do
+## Features
+- Search Confluence from Alfred and open results in your browser
+- Works on M1 and Intel Macs
+
+## Development
+The current development setup assumes that it is built on a Mac with M1.
+
+### To do
 - [ ] include id in results to alfred to ensure learning by selection
 - [ ] possibility to copy url without opening result
 - [ ] include "search in confluence" option in results
@@ -9,7 +16,7 @@ Search Confluence from Alfred and open results in your browser.
 - [x] readme
 - [x] publish
 - [x] create release in github
-- [ ] build for intel chip (universal release?)
+- [x] build for intel chip (universal release?)
 - [ ] compare to python workflow
 - [ ] use token based auth
 - [x] utf-8 chars not searchable (e.g. "führung")
