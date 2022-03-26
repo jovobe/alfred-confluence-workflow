@@ -12,7 +12,7 @@ Search Confluence from Alfred and open results in your browser.
 - [ ] build for intel chip (universal release?)
 - [ ] compare to python workflow
 - [ ] use token based auth
-- [ ] utf-8 chars not searcheable (e.g. "führung")
+- [x] utf-8 chars not searchable (e.g. "führung")
 - [ ] add getting started section to readme
 
 ---

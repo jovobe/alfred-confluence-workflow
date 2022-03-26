@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
 use reqwest::{Error, blocking::Client};
 use anyhow::{Context, Result};
+use unicode_normalization::UnicodeNormalization;
 use std::env;
 
 fn main() -> Result<()> {
@@ -9,7 +10,7 @@ fn main() -> Result<()> {
     let base_url = env::var("BASE_URL").context("Confluence base url not found!")?;
 
     let args: Vec<String> = env::args().collect();
-    let query = &args[1];
+    let query = &args[1].nfc().collect::<String>();
     let request_url = format!("{base_url}/rest/quicknav/1/search", base_url = base_url);
 
     let client = Client::new();
