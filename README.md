@@ -5,10 +5,10 @@ Search Confluence from Alfred and open results in your browser.
 - [ ] include id in results to alfred to ensure learning by selection
 - [ ] possibility to copy url without opening result
 - [ ] include "search in confluence" option in results
-- [ ] fix &amp strings in results
-- [ ] readme
-- [ ] publish
-- [ ] create release in github
+- [x] fix &amp strings in results
+- [x] readme
+- [x] publish
+- [x] create release in github
 - [ ] build for intel chip (universal release?)
 - [ ] compare to python workflow
 - [ ] use token based auth
