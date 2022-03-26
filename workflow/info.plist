@@ -71,11 +71,11 @@
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
-				<false/>
+				<true/>
 				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
 				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
 				<key>runningsubtext</key>
 				<string>Searching...</string>
 				<key>script</key>
@@ -122,6 +122,21 @@ The Alfred Confluence workflow makes the Confluence search available in the Alfr
 			<integer>50</integer>
 		</dict>
 	</dict>
+	<key>variables</key>
+	<dict>
+		<key>BASE_URL</key>
+		<string>Base URL with protocol and without trailing slash. e.g. https://confluence.atlassian.com</string>
+		<key>PASSWORD</key>
+		<string></string>
+		<key>USERNAME</key>
+		<string></string>
+	</dict>
+	<key>variablesdontexport</key>
+	<array>
+		<string>BASE_URL</string>
+		<string>PASSWORD</string>
+		<string>USERNAME</string>
+	</array>
 	<key>version</key>
 	<string>1.0.0</string>
 	<key>webaddress</key>
