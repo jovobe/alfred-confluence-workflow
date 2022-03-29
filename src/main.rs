@@ -59,11 +59,17 @@ struct AlfredResult {
     subtitle: String,
     arg: String,
     icon: AlfredResultIcon,
+    text: AlfredResultText,
 }
 
 #[derive(Serialize, Debug)]
 struct AlfredResultIcon {
     path: String,
+}
+
+#[derive(Serialize, Debug)]
+struct AlfredResultText {
+    copy: String,
 }
 
 #[derive(Serialize, Debug)]
@@ -73,13 +79,17 @@ struct AlfredResultList {
 
 impl AlfredResult {
     fn from(confluence_match: Match, base_url: &String) -> AlfredResult {
+        let url = format!("{}{}", base_url, confluence_match.href);
         AlfredResult {
             uid: confluence_match.id.unwrap(),
             title: html_escape::decode_html_entities(&confluence_match.name).into_owned(),
             subtitle: confluence_match.space_name.unwrap(),
-            arg: format!("{}{}", base_url, confluence_match.href),
+            arg: url.clone(),
             icon: AlfredResultIcon {
                 path: format!("assets/{}.png", confluence_match.class_name),
+            },
+            text: AlfredResultText {
+                copy: url,
             },
         }
     }

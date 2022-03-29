@@ -3,6 +3,7 @@ Search Confluence from Alfred and open results in your browser.
 
 ## Features
 - Search Confluence from Alfred and open results in your browser
+- Copy Confluence page URL to clipboard (⌘ + C on an Alfred result)
 - Works on M1 and Intel Macs
 
 ## Development
@@ -10,7 +11,7 @@ The current development setup assumes that it is built on a Mac with M1.
 
 ### To do
 - [x] include id in results to alfred to ensure learning by selection
-- [ ] possibility to copy url without opening result
+- [x] possibility to copy url without opening result
 - [ ] include "search in confluence" option in results
 - [x] fix &amp strings in results
 - [x] readme
