@@ -54,6 +54,7 @@ struct Match {
 
 #[derive(Serialize, Debug)]
 struct AlfredResult {
+    uid: String,
     title: String,
     subtitle: String,
     arg: String,
@@ -73,6 +74,7 @@ struct AlfredResultList {
 impl AlfredResult {
     fn from(confluence_match: Match, base_url: &String) -> AlfredResult {
         AlfredResult {
+            uid: confluence_match.id.unwrap(),
             title: html_escape::decode_html_entities(&confluence_match.name).into_owned(),
             subtitle: confluence_match.space_name.unwrap(),
             arg: format!("{}{}", base_url, confluence_match.href),

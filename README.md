@@ -9,7 +9,7 @@ Search Confluence from Alfred and open results in your browser.
 The current development setup assumes that it is built on a Mac with M1.
 
 ### To do
-- [ ] include id in results to alfred to ensure learning by selection
+- [x] include id in results to alfred to ensure learning by selection
 - [ ] possibility to copy url without opening result
 - [ ] include "search in confluence" option in results
 - [x] fix &amp strings in results
