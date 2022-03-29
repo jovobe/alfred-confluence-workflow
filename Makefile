@@ -9,3 +9,4 @@ all:
 	cd workflow && zip -qR alfred-confluence-workflow.alfredworkflow "*"
 	rm workflow/acw-arm workflow/acw-x86
 	mv workflow/alfred-confluence-workflow.alfredworkflow build/
+	open build/alfred-confluence-workflow.alfredworkflow
