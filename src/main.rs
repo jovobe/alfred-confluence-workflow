@@ -6,8 +6,9 @@ use serde_variant::to_variant_name;
 use std::env;
 
 fn main() -> Result<()> {
-    let username = env::var("USERNAME").context("Confluence username not found!")?;
-    let password = env::var("PASSWORD").context("Confluence password not found!")?;
+    let access_token = env::var("ACCESS_TOKEN").context("Confluence access token not found!");
+    let username = env::var("USERNAME").context("Confluence username not found!");
+    let password = env::var("PASSWORD").context("Confluence password not found!");
     let base_url = env::var("BASE_URL").context("Confluence base url not found!")?;
 
     let args: Vec<String> = env::args().collect();
@@ -15,18 +16,19 @@ fn main() -> Result<()> {
     let request_url = format!("{base_url}/rest/quicknav/1/search", base_url = base_url);
 
     let client = Client::new();
-    let request = client
-        .get(request_url)
-        .query(&[("query", query)])
-        .basic_auth(username, Some(password));
+    let mut request = client.get(request_url).query(&[("query", query)]);
+    if access_token.is_ok() {
+        request = request.bearer_auth(access_token.unwrap());
+    } else if username.is_ok() && password.is_ok() {
+        request = request.basic_auth(username.unwrap(), Some(password.unwrap()));
+    } else {
+        panic!("No authentication method found!");
+    }
     let response = request.send()?;
-
     let result: ApiResponse = response.json()?;
 
     let result_list = AlfredResultList::from(result, &base_url);
-    if cfg!(debug_assertions) {
-        println!("{:#?}", result_list);
-    }
+
     let out = serde_json::to_string(&result_list).unwrap();
     println!("{}", out);
 

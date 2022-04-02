@@ -5,6 +5,22 @@ Search Confluence from Alfred and open results in your browser.
 - Search Confluence from Alfred and open results in your browser
 - Copy Confluence page URL to clipboard (⌘ + C on an Alfred result)
 - Works on M1 and Intel Macs
+- Authenticate with your Confluence account via Access Token or Username/Password
+
+## Usage
+1. Download the latest version of the workflow [here](https://github.com/jovobe/alfred-confluence-workflow/releases)
+2. Open the workflow in Alfred
+3. Adjust the environment variables accordingly
+4. Type `c <search term>` in Alfred to search Confluence
+
+### Environment variables
+- `BASE_URL`: Confluence base URL without trailing slash e.g. https://confluence.example.com
+- `ACCESS_TOKEN`: Confluence access token
+- `USERNAME`: Confluence username
+- `PASSWORD`: Confluence password
+
+### Authentication
+You can use either an access token or a username/password combination. You can obtain an access token by following the instructions [here](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html). If you use an access token, you can omit the username and password. If you use a username/password combination, you can omit the access token. If you provide both, the access token will be used.
 
 ## Development
 The current development setup assumes that it is built on a Mac with M1.
@@ -18,10 +34,16 @@ The current development setup assumes that it is built on a Mac with M1.
 - [x] publish
 - [x] create release in github
 - [x] build for intel chip (universal release?)
-- [ ] compare to python workflow
-- [ ] use token based auth
+- [x] compare to python workflow
+- [x] use token based auth
 - [x] utf-8 chars not searchable (e.g. "führung")
-- [ ] add getting started section to readme
+- [x] add getting started section to readme
+
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request with your changes or open an issue with your suggestions.
+
+## Credits
+This project is heavily inspired by [alfred-confluence](https://github.com/skleinei/alfred-confluence) which is a Python based workflow for searching Confluence. The mentioned project is not working anymore due to the removal of Python 2 support in macOS 12.3.
 
 ---
 
