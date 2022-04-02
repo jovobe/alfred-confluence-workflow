@@ -1,7 +1,8 @@
 use serde::{Serialize, Deserialize};
-use reqwest::{Error, blocking::Client};
+use reqwest::blocking::Client;
 use anyhow::{Context, Result};
 use unicode_normalization::UnicodeNormalization;
+use serde_variant::to_variant_name;
 use std::env;
 
 fn main() -> Result<()> {
@@ -47,9 +48,30 @@ struct Match {
     id: Option<String>,
     name: String,
     href: String,
-    class_name: String,
+    class_name: MatchClassName,
     space_name: Option<String>,
     space_key: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+enum MatchClassName {
+    #[serde(rename = "content-type-page")]
+    Page,
+    #[serde(rename = "content-type-blogpost")]
+    BlogPost,
+    #[serde(rename = "search-for")]
+    SearchFor,
+    #[serde(other)]
+    Unknown,
+}
+
+impl MatchClassName {
+    fn to_string(&self) -> String {
+        match self {
+            MatchClassName::Page | MatchClassName::BlogPost | MatchClassName::SearchFor => to_variant_name(self).unwrap().into(),
+            MatchClassName::Unknown => panic!("Unsupported match class name"),
+        }
+    }
 }
 
 #[derive(Serialize, Debug)]
@@ -86,10 +108,26 @@ impl AlfredResult {
             subtitle: confluence_match.space_name.unwrap(),
             arg: url.clone(),
             icon: AlfredResultIcon {
-                path: format!("assets/{}.png", confluence_match.class_name),
+                path: format!("assets/{}.png", confluence_match.class_name.to_string()),
             },
             text: AlfredResultText {
                 copy: url,
+            },
+        }
+    }
+
+    fn from_search_in_confluence_match(confluence_match: Match, base_url: &String) -> AlfredResult {
+        let url = format!("{}{}", base_url, confluence_match.href);
+        AlfredResult {
+            uid: "search-item".to_string(),
+            title: html_escape::decode_html_entities(&confluence_match.name).into_owned(),
+            subtitle: "Use full Confluence Search".to_string(),
+            arg: url.clone(),
+            icon: AlfredResultIcon {
+                path: format!("assets/{}.png", confluence_match.class_name.to_string()),
+            },
+            text: AlfredResultText {
+                copy: confluence_match.name,
             },
         }
     }
@@ -102,9 +140,14 @@ impl AlfredResultList {
                 .content_name_matches
                 .into_iter()
                 .flatten()
-                .filter(|m| m.id.is_some())
-                .filter(|m| m.class_name == "content-type-page" || m.class_name == "content-type-blogpost" || m.class_name == "search-for")
-                .map(|m| AlfredResult::from(m, base_url))
+                .filter(|m| m.class_name != MatchClassName::Unknown)
+                .map(|m|
+                    match m.class_name {
+                        MatchClassName::Page | MatchClassName::BlogPost => AlfredResult::from(m, base_url),
+                        MatchClassName::SearchFor => AlfredResult::from_search_in_confluence_match(m, base_url),
+                        _ => panic!("Unsupported match class name"),
+                    }
+                )
                 .collect(),
         }
     }

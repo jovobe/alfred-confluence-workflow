@@ -12,7 +12,7 @@ The current development setup assumes that it is built on a Mac with M1.
 ### To do
 - [x] include id in results to alfred to ensure learning by selection
 - [x] possibility to copy url without opening result
-- [ ] include "search in confluence" option in results
+- [x] include "search in confluence" option in results
 - [x] fix &amp strings in results
 - [x] readme
 - [x] publish
