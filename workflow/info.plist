@@ -141,7 +141,7 @@ The Alfred Confluence workflow makes the Confluence search available in the Alfr
 		<string>USERNAME</string>
 	</array>
 	<key>version</key>
-	<string>1.1.0</string>
+	<string>1.1.1</string>
 	<key>webaddress</key>
 	<string>https://github.com/jovobe/alfred-confluence-workflow</string>
 </dict>
