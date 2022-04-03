@@ -17,7 +17,7 @@ fn main() -> Result<()> {
 
     let client = Client::new();
     let mut request = client.get(request_url).query(&[("query", query)]);
-    if access_token.is_ok() {
+    if access_token.is_ok() && !access_token.as_ref().unwrap().is_empty() {
         request = request.bearer_auth(access_token.unwrap());
     } else if username.is_ok() && password.is_ok() {
         request = request.basic_auth(username.unwrap(), Some(password.unwrap()));
