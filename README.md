@@ -6,6 +6,7 @@ Search Confluence from Alfred and open results in your browser.
 - Copy Confluence page URL to clipboard (⌘ + C on an Alfred result)
 - Works on M1 and Intel Macs
 - Authenticate with your Confluence account via Access Token or Username/Password
+- Works for Confluence Enterprise and Confluence Cloud
 
 ## Usage
 1. Download the latest version of the workflow [here](https://github.com/jovobe/alfred-confluence-workflow/releases)
@@ -15,11 +16,13 @@ Search Confluence from Alfred and open results in your browser.
 
 ### Environment variables
 - `BASE_URL`: Confluence base URL without trailing slash e.g. https://confluence.example.com
-- `ACCESS_TOKEN`: Confluence access token
+- `ACCESS_TOKEN`: Confluence access token (only for Confluence Enterprise)
 - `USERNAME`: Confluence username
-- `PASSWORD`: Confluence password
+- `PASSWORD`: Confluence password (or API Token when the cloud version is used, see [here](#authentication))
 
 ### Authentication
+**For Cloud Users:** In the cloud version you have to use the username/password combination! The username is your Confluence username and the password is an API Token. You can obtain a token [here](https://id.atlassian.com/manage/api-tokens).
+
 You can use either an access token or a username/password combination. You can obtain an access token by following the instructions [here](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html). If you use an access token, you can omit the username and password. If you use a username/password combination, you can omit the access token. If you provide both, the access token will be used.
 
 ## Development
