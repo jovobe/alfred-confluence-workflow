@@ -25,6 +25,12 @@ fn main() -> Result<()> {
         panic!("No authentication method found!");
     }
     let response = request.send()?;
+
+    let status = response.status();
+    if !status.is_success() {
+        panic!("Request failed with status code \"{}\". Check your BASE_URL and auth credentials!", status);
+    }
+
     let result: ApiResponse = response.json()?;
 
     let result_list = AlfredResultList::from(result, &base_url);
@@ -40,7 +46,7 @@ fn main() -> Result<()> {
 struct ApiResponse {
     query_tokens: Vec<String>,
     query: String,
-    total_size: u32,
+    total_size: Option<u32>,
     content_name_matches: Vec<Vec<Match>>,
 }
 
