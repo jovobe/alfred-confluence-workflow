@@ -1,21 +1,30 @@
-use serde::{Serialize, Deserialize};
-use reqwest::blocking::Client;
-use anyhow::{Context, Result};
-use unicode_normalization::UnicodeNormalization;
-use serde_variant::to_variant_name;
 use std::env;
+use std::time::Duration;
+
+use anyhow::{Context, Result};
+use reqwest::blocking::Client;
+use serde::{Deserialize, Serialize};
+use serde_variant::to_variant_name;
+use unicode_normalization::UnicodeNormalization;
+use url::{Position, Url};
 
 fn main() -> Result<()> {
     let access_token = env::var("ACCESS_TOKEN").context("Confluence access token not found!");
     let username = env::var("USERNAME").context("Confluence username not found!");
     let password = env::var("PASSWORD").context("Confluence password not found!");
     let base_url = env::var("BASE_URL").context("Confluence base url not found!")?;
+    let parsed_base_url = Url::parse(base_url.as_str())?;
+    let base_url_without_path = &parsed_base_url[..Position::BeforePath];
 
     let args: Vec<String> = env::args().collect();
     let query = &args[1].nfc().collect::<String>();
-    let request_url = format!("{base_url}/rest/quicknav/1/search", base_url = base_url);
+    let request_url = format!("{}/rest/quicknav/1/search", base_url.trim_end_matches("/"));
 
-    let client = Client::new();
+    let client = Client::builder()
+        .timeout(Duration::from_secs(10))
+        .build()
+        .unwrap();
+
     let mut request = client.get(request_url).query(&[("query", query)]);
     if access_token.is_ok() && !access_token.as_ref().unwrap().is_empty() {
         request = request.bearer_auth(access_token.unwrap());
@@ -33,7 +42,7 @@ fn main() -> Result<()> {
 
     let result: ApiResponse = response.json()?;
 
-    let result_list = AlfredResultList::from(result, &base_url);
+    let result_list = AlfredResultList::from(result, base_url_without_path);
 
     let out = serde_json::to_string(&result_list).unwrap();
     println!("{}", out);
@@ -108,8 +117,9 @@ struct AlfredResultList {
 }
 
 impl AlfredResult {
-    fn from(confluence_match: Match, base_url: &String) -> AlfredResult {
+    fn from(confluence_match: Match, base_url: &str) -> AlfredResult {
         let url = format!("{}{}", base_url, confluence_match.href);
+
         AlfredResult {
             uid: confluence_match.id.unwrap(),
             title: html_escape::decode_html_entities(&confluence_match.name).into_owned(),
@@ -119,13 +129,14 @@ impl AlfredResult {
                 path: format!("assets/{}.png", confluence_match.class_name.to_string()),
             },
             text: AlfredResultText {
-                copy: url,
+                copy: url.clone(),
             },
         }
     }
 
-    fn from_search_in_confluence_match(confluence_match: Match, base_url: &String) -> AlfredResult {
+    fn from_search_in_confluence_match(confluence_match: Match, base_url: &str) -> AlfredResult {
         let url = format!("{}{}", base_url, confluence_match.href);
+
         AlfredResult {
             uid: "search-item".to_string(),
             title: html_escape::decode_html_entities(&confluence_match.name).into_owned(),
@@ -142,7 +153,7 @@ impl AlfredResult {
 }
 
 impl AlfredResultList {
-    fn from(response: ApiResponse, base_url: &String) -> AlfredResultList {
+    fn from(response: ApiResponse, base_url: &str) -> AlfredResultList {
         AlfredResultList {
             items: response
                 .content_name_matches
