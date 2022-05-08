@@ -13,6 +13,7 @@ dependencies = [
  "serde_json",
  "serde_variant",
  "unicode-normalization",
+ "url",
 ]
 
 [[package]]
