@@ -15,7 +15,7 @@ Search Confluence from Alfred and open results in your browser.
 4. Type `c <search term>` in Alfred to search Confluence
 
 ### Environment variables
-- `BASE_URL`: Confluence base URL e.g. https://confluence.example.com
+- `BASE_URL`: Confluence base URL e.g. https://confluence.example.com. For Cloud users: Don't forget to append the "/wiki" part here! (e.g. https://example.atlassian.net/wiki)
 - `ACCESS_TOKEN`: Confluence access token (only for Confluence Enterprise)
 - `USERNAME`: Confluence username
 - `PASSWORD`: Confluence password (or API Token when the cloud version is used, see [here](#authentication))
