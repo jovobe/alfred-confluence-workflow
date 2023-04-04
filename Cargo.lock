@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "alfred-confluence-workflow"
-version = "1.1.4"
+version = "1.1.5"
 dependencies = [
  "anyhow",
  "html-escape",
